@@ -15,7 +15,7 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-const sqlCode = `CREATE DATABASE [demo-school];`;
+const sqlCode = `CREATE DATABASE \`demo_school\`;`;
 
 export default function CreateDatabasePage() {
   return (

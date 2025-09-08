@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router'; // 'react-router' is deprecated, use 'react-router-dom'
+import { Link, useLocation } from 'react-router';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // --- Data for Navigation (No changes) ---
@@ -59,18 +59,32 @@ const CloseIcon = () => (
 // --- Main Nav Component ---
 export default function Nav() {
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+  const [leaveTimeoutId, setLeaveTimeoutId] = useState<NodeJS.Timeout | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
   const location = useLocation();
   const activePath = location.pathname;
 
-  // Close mobile menu on route change
+  const handleMouseEnter = (itemName: string) => {
+    if (leaveTimeoutId) {
+      clearTimeout(leaveTimeoutId);
+      setLeaveTimeoutId(null);
+    }
+    setHoveredItem(itemName);
+  };
+
+  const handleMouseLeave = () => {
+    const timeoutId = setTimeout(() => {
+      setHoveredItem(null);
+    }, 200);
+    setLeaveTimeoutId(timeoutId);
+  };
+
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [location]);
 
-  // Find Parent of the active page for highlighting the main menu
   let activeParentName: string | undefined;
   for (const key in dropdownData) {
     const items = dropdownData[key as keyof typeof dropdownData];
@@ -83,7 +97,8 @@ export default function Nav() {
   const itemToHighlight = hoveredItem || navLinks.find(link => link.href === activePath)?.name || activeParentName;
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-sm">
+    // OPTIMIZE: Changed bg-black/80 to bg-black/50 for more transparency
+    <header className="fixed top-0 left-0 right-0 z-50 bg-black/50 backdrop-blur-sm border-b border-white/10">
       <div className="flex items-center justify-between h-14 px-4 max-w-screen-xl mx-auto">
 
         {/* Left Section: Logo and Title */}
@@ -105,8 +120,8 @@ export default function Nav() {
                 <li
                   key={link.name}
                   className="relative"
-                  onMouseEnter={() => setHoveredItem(link.name)}
-                  onMouseLeave={() => setHoveredItem(null)}
+                  onMouseEnter={() => handleMouseEnter(link.name)}
+                  onMouseLeave={handleMouseLeave}
                 >
                   <Link
                     to={link.href || '#'}
@@ -131,7 +146,8 @@ export default function Nav() {
                         transition={{ duration: 0.2, ease: 'easeOut' }}
                         className="absolute top-full right-0 mt-2.5 w-max z-30"
                       >
-                        <div className="bg-gray-800/90 backdrop-blur-lg rounded-lg shadow-xl p-3">
+                        {/* OPTIMIZE: Changed bg-gray-800/90 to bg-gray-800/70 */}
+                        <div className="bg-gray-800/70 backdrop-blur-lg rounded-lg shadow-xl p-3 border border-white/10">
                           <div className="grid grid-cols-1 gap-1">
                             {dropdownItems.map((item) => (
                               <Link
@@ -182,7 +198,8 @@ export default function Nav() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.2 }}
-                className="md:hidden absolute top-full left-0 w-full bg-black/90 backdrop-blur-lg border-t border-white/10 shadow-lg"
+                // OPTIMIZE: Changed bg-black/90 to bg-black/70
+                className="md:hidden absolute top-full left-0 w-full bg-black/70 backdrop-blur-lg border-t border-white/10 shadow-lg"
             >
                 <ul className="p-4 space-y-2">
                     {navLinks.map(link => {
