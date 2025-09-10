@@ -22,7 +22,8 @@ const installSteps = [
     {
         name: 'Step 2: ติดตั้ง Dependencies',
         description: 'ติดตั้งไลบรารีที่จำเป็นสำหรับ Express.js backend และ nodemon สำหรับการรีสตาร์ทเซิร์ฟเวอร์อัตโนมัติ',
-        code: `npm install express cors mysql2 multer morgan dotenv\nnpm install --save-dev nodemon`,
+        // --- UPDATED CODE HERE ---
+        code: `npm install express cors mysql2 multer morgan dotenv helmet compression\nnpm install --save-dev nodemon`,
         language: 'bash',
     },
     {
@@ -50,7 +51,6 @@ const installSteps = [
         name: 'สำหรับการติดตั้ง Tailwind CSS',
         description: 'หากไม่ได้ติดตั้งผ่าน Framework ในขั้นตอนก่อนหน้า คุณสามารถติดตั้ง Tailwind CSS แยกได้',
         code: `npm install tailwindcss @tailwindcss/vite`,
-        // --- LINK UPDATED HERE ---
         link: 'https://tailwindcss.com/docs/installation/framework-guides/react-router',
         language: 'bash',
     },
@@ -58,7 +58,6 @@ const installSteps = [
         name: 'สำหรับการติดตั้ง Framer-Motion',
         description: 'ติดตั้ง Framer-Motion สำหรับการสร้างแอนิเมชันที่สวยงามและใช้งานง่าย',
         code: `npm install framer-motion`,
-        // --- LINK UPDATED HERE ---
         link: 'https://motion.dev/docs/react',
         language: 'bash',
     },
@@ -94,7 +93,6 @@ export default function InstallPage() {
                                         <div key={idx} className="bg-gray-800 p-4 rounded-lg">
                                             <p className="text-sm text-gray-300 font-bold mb-2">{option.type}</p>
                                             
-                                            {/* --- LAYOUT CHANGED HERE --- */}
                                             <CodeBlock code={option.code} language={option.language} />
                                             <div className="mt-4 text-right">
                                                 <motion.a 
@@ -116,7 +114,6 @@ export default function InstallPage() {
                                 </div>
                             ) : (
                                 <>
-                                    {/* --- LAYOUT CHANGED HERE --- */}
                                     <CodeBlock code={step.code} language={step.language} />
                                     {step.link && (
                                         <div className="mt-4 text-right">
